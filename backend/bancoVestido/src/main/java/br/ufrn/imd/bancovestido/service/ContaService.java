@@ -10,6 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -47,5 +48,11 @@ public class ContaService {
     public void delete(Long id) throws ResourceNotFoundException {
         Conta conta = this.findOne(id);
         this.contaRepository.delete(conta);
+    }
+
+    @Transactional
+    public void credito(Long id, BigDecimal valor) throws ResourceNotFoundException {
+        Conta conta = this.findOne(id);
+        conta.setSaldo(conta.getSaldo().add(valor));
     }
 }
