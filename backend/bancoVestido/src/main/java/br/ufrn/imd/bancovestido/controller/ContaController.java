@@ -7,6 +7,7 @@ import br.ufrn.imd.bancovestido.service.ContaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.math.BigDecimal;
@@ -25,6 +26,11 @@ public class ContaController {
     @GetMapping(path = "/{id}")
     public ContaDTO findOne(@PathVariable(name = "id") Long idConta) throws ResourceNotFoundException {
         return ContaMapper.map(this.contaService.findOne(idConta));
+    }
+
+    @GetMapping(path = "/{id}/saldo")
+    public BigDecimal getSaldo(@PathVariable(name = "id") Long idConta) throws ResourceNotFoundException {
+        return this.contaService.getSaldo(idConta);
     }
 
     @PostMapping
