@@ -1,0 +1,51 @@
+package br.ufrn.imd.bancovestido.service;
+
+import br.ufrn.imd.bancovestido.exception.ResourceNotFoundException;
+import br.ufrn.imd.bancovestido.model.Conta;
+import br.ufrn.imd.bancovestido.model.Pessoa;
+import br.ufrn.imd.bancovestido.repository.ContaRepository;
+import br.ufrn.imd.bancovestido.repository.PessoaRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class ContaService {
+    private final ContaRepository contaRepository;
+    private final PessoaRepository pessoaRepository;
+
+    public Conta findOne(Long id) throws ResourceNotFoundException {
+        return this.contaRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
+    }
+
+    public List<Conta> findAll() {
+        return this.contaRepository.findAll();
+    }
+
+    @Transactional
+    public Conta save(Conta conta) throws ResourceNotFoundException {
+        Conta contaBD = new Conta();
+
+        if (conta.getId() != null) {
+            contaBD = this.findOne(conta.getId());
+        } else {
+            Pessoa pessoa = this.pessoaRepository.findById(conta.getPessoa().getId())
+                    .orElseThrow(ResourceNotFoundException::new);
+            contaBD.setPessoa(pessoa);
+        }
+
+        BeanUtils.copyProperties(conta, contaBD, Conta.ignoreProperties);
+
+        return this.contaRepository.save(contaBD);
+    }
+
+    @Transactional
+    public void delete(Long id) throws ResourceNotFoundException {
+        Conta conta = this.findOne(id);
+        this.contaRepository.delete(conta);
+    }
+}

@@ -13,4 +13,14 @@ public class PessoaMapper {
 
         return pessoaDTO;
     }
+
+    public static Pessoa map(PessoaDTO pessoaDTO) {
+        Pessoa pessoa = new Pessoa();
+
+        pessoa.setId(pessoaDTO.getId());
+        pessoa.setNome(pessoaDTO.getNome());
+        pessoa.setDataNascimento(pessoaDTO.getDataNascimento());
+
+        return pessoa;
+    }
 }
