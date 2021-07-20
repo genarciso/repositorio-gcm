@@ -10,6 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.math.BigDecimal;
 
@@ -59,6 +60,13 @@ public class ContaService {
     public void debito(Long id, BigDecimal valor) throws ResourceNotFoundException {
         Conta conta = this.findOne(id);
         conta.setSaldo(conta.getSaldo().subtract(valor));
+        this.contaRepository.save(conta);
+    }
+
+    @Transactional
+    public void credito(Long id, BigDecimal valor) throws ResourceNotFoundException {
+        Conta conta = this.findOne(id);
+        conta.setSaldo(conta.getSaldo().add(valor));
         this.contaRepository.save(conta);
     }
 }
