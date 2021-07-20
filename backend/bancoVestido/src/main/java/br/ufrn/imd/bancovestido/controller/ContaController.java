@@ -43,7 +43,7 @@ public class ContaController {
     }
 
     @PutMapping(path = "/{id}/debito")
-    public void credit(@PathVariable(name = "id") Long idConta, @RequestParam(name = "valor") BigDecimal value) throws ResourceNotFoundException {
+    public void debit(@PathVariable(name = "id") Long idConta, @RequestParam(name = "valor") BigDecimal value) throws ResourceNotFoundException {
         this.contaService.debito(idConta, value);
     }
 
