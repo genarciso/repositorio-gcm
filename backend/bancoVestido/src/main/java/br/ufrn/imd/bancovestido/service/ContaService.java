@@ -60,5 +60,6 @@ public class ContaService {
     public void credito(Long id, BigDecimal valor) throws ResourceNotFoundException {
         Conta conta = this.findOne(id);
         conta.setSaldo(conta.getSaldo().add(valor));
+        this.contaRepository.save(conta);
     }
 }
