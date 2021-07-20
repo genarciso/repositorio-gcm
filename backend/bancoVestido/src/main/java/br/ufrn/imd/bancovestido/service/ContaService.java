@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +25,11 @@ public class ContaService {
 
     public List<Conta> findAll() {
         return this.contaRepository.findAll();
+    }
+
+    public BigDecimal getSaldo(Long id) throws ResourceNotFoundException {
+        Conta conta = findOne(id);
+        return conta.getSaldo();
     }
 
     @Transactional
