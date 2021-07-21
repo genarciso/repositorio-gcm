@@ -28,6 +28,9 @@ public class Conta {
     @Column(name = "saldo")
     private BigDecimal saldo = BigDecimal.ZERO;
 
+    @Column(name = "numero_conta", unique = true)
+    private String numeroConta = "";
+
     @Column(name = "data_criacao")
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
