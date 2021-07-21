@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 @Getter
 public class TransferenciaContaDTO {
-    public Long idConta;
-    public Long idContaDestino;
+    public String idConta;
+    public String idContaDestino;
     public BigDecimal valor;
 }

@@ -25,12 +25,12 @@ public class ContaController {
     }
 
     @GetMapping(path = "/{id}")
-    public ContaDTO findOne(@PathVariable(name = "id") Long idConta) throws ResourceNotFoundException {
+    public ContaDTO findOne(@PathVariable(name = "id") String idConta) throws ResourceNotFoundException {
         return ContaMapper.map(this.contaService.findOne(idConta));
     }
 
     @GetMapping(path = "/{id}/saldo")
-    public BigDecimal getSaldo(@PathVariable(name = "id") Long idConta) throws ResourceNotFoundException {
+    public BigDecimal getSaldo(@PathVariable(name = "id") String idConta) throws ResourceNotFoundException {
         return this.contaService.getSaldo(idConta);
     }
 
@@ -40,17 +40,17 @@ public class ContaController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public void delete(@PathVariable(name = "id") Long idConta) throws ResourceNotFoundException {
+    public void delete(@PathVariable(name = "id") String idConta) throws ResourceNotFoundException {
         this.contaService.delete(idConta);
     }
 
     @PutMapping(path = "/{id}/debito")
-    public void debit(@PathVariable(name = "id") Long idConta, @RequestParam(name = "valor") BigDecimal value) throws ResourceNotFoundException {
+    public void debit(@PathVariable(name = "id") String idConta, @RequestParam(name = "valor") BigDecimal value) throws ResourceNotFoundException {
         this.contaService.debito(idConta, value);
     }
 
     @PutMapping(path = "/{id}/credito")
-    public void credit(@PathVariable(name = "id") Long idConta, @RequestParam(name = "valor") BigDecimal value) throws ResourceNotFoundException {
+    public void credit(@PathVariable(name = "id") String idConta, @RequestParam(name = "valor") BigDecimal value) throws ResourceNotFoundException {
         this.contaService.credito(idConta, value);
     }
 

@@ -12,7 +12,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ContaDTO {
     private Long id;
+    private String numeroConta;
     private TipoConta tipoConta;
-    private BigDecimal saldo;
+    private BigDecimal saldo = BigDecimal.ZERO;
     private PessoaDTO pessoa;
 }

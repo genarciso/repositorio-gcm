@@ -21,15 +21,15 @@ public class ContaService {
     private final ContaRepository contaRepository;
     private final PessoaRepository pessoaRepository;
 
-    public Conta findOne(Long id) throws ResourceNotFoundException {
-        return this.contaRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
+    public Conta findOne(String id) throws ResourceNotFoundException {
+        return this.contaRepository.findByNumeroConta(id).orElseThrow(ResourceNotFoundException::new);
     }
 
     public List<Conta> findAll() {
         return this.contaRepository.findAll();
     }
 
-    public BigDecimal getSaldo(Long id) throws ResourceNotFoundException {
+    public BigDecimal getSaldo(String id) throws ResourceNotFoundException {
         Conta conta = findOne(id);
         return conta.getSaldo();
     }
@@ -39,7 +39,7 @@ public class ContaService {
         Conta contaBD = new Conta();
 
         if (conta.getId() != null) {
-            contaBD = this.findOne(conta.getId());
+            contaBD = this.findOne(conta.getNumeroConta());
         } else {
             Pessoa pessoa = this.pessoaRepository.findById(conta.getPessoa().getId())
                     .orElseThrow(ResourceNotFoundException::new);
@@ -52,27 +52,27 @@ public class ContaService {
     }
 
     @Transactional
-    public void delete(Long id) throws ResourceNotFoundException {
+    public void delete(String id) throws ResourceNotFoundException {
         Conta conta = this.findOne(id);
         this.contaRepository.delete(conta);
     }
 
     @Transactional
-    public void debito(Long id, BigDecimal valor) throws ResourceNotFoundException {
+    public void debito(String id, BigDecimal valor) throws ResourceNotFoundException {
         Conta conta = this.findOne(id);
         conta.setSaldo(conta.getSaldo().subtract(valor));
         this.contaRepository.save(conta);
     }
 
     @Transactional
-    public void credito(Long id, BigDecimal valor) throws ResourceNotFoundException {
+    public void credito(String id, BigDecimal valor) throws ResourceNotFoundException {
         Conta conta = this.findOne(id);
         conta.setSaldo(conta.getSaldo().add(valor));
         this.contaRepository.save(conta);
     }
 
     @Transactional
-    public void transferencia(Long idConta, Long idContaDestino, BigDecimal valor) throws ResourceNotFoundException, InvalidValueException {
+    public void transferencia(String idConta, String idContaDestino, BigDecimal valor) throws ResourceNotFoundException, InvalidValueException {
         Conta conta = this.findOne(idConta);
         Conta contaDestino = this.findOne(idContaDestino);
         if (conta.getSaldo().doubleValue() >= valor.doubleValue()) {
