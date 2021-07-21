@@ -1,6 +1,8 @@
 package br.ufrn.imd.bancovestido.controller;
 
 import br.ufrn.imd.bancovestido.DTO.ContaDTO;
+import br.ufrn.imd.bancovestido.DTO.TransferenciaContaDTO;
+import br.ufrn.imd.bancovestido.exception.InvalidValueException;
 import br.ufrn.imd.bancovestido.exception.ResourceNotFoundException;
 import br.ufrn.imd.bancovestido.mapper.ContaMapper;
 import br.ufrn.imd.bancovestido.service.ContaService;
@@ -10,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/v1/conta")
@@ -51,6 +52,11 @@ public class ContaController {
     @PutMapping(path = "/{id}/credito")
     public void credit(@PathVariable(name = "id") Long idConta, @RequestParam(name = "valor") BigDecimal value) throws ResourceNotFoundException {
         this.contaService.credito(idConta, value);
+    }
+
+    @PostMapping(path = "/transferir")
+    public void transfer(@RequestBody TransferenciaContaDTO transferenciaConta) throws ResourceNotFoundException, InvalidValueException {
+        this.contaService.transferencia(transferenciaConta.getIdConta(), transferenciaConta.getIdContaDestino(), transferenciaConta.getValor());
     }
 
 }

@@ -1,5 +1,6 @@
 package br.ufrn.imd.bancovestido.service;
 
+import br.ufrn.imd.bancovestido.exception.InvalidValueException;
 import br.ufrn.imd.bancovestido.exception.ResourceNotFoundException;
 import br.ufrn.imd.bancovestido.model.Conta;
 import br.ufrn.imd.bancovestido.model.Pessoa;
@@ -68,5 +69,19 @@ public class ContaService {
         Conta conta = this.findOne(id);
         conta.setSaldo(conta.getSaldo().add(valor));
         this.contaRepository.save(conta);
+    }
+
+    @Transactional
+    public void transferencia(Long idConta, Long idContaDestino, BigDecimal valor) throws ResourceNotFoundException, InvalidValueException {
+        Conta conta = this.findOne(idConta);
+        Conta contaDestino = this.findOne(idContaDestino);
+        if (conta.getSaldo().doubleValue() >= valor.doubleValue()) {
+            credito(idContaDestino, valor);
+            debito(idConta, valor);
+            this.save(conta);
+            this.save(contaDestino);
+        } else {
+            throw new InvalidValueException("Valor insuficiente para transferência");
+        }
     }
 }
