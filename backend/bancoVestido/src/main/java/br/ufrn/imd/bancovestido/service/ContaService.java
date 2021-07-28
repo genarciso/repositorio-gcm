@@ -1,5 +1,6 @@
 package br.ufrn.imd.bancovestido.service;
 
+import br.ufrn.imd.bancovestido.enuns.TipoConta;
 import br.ufrn.imd.bancovestido.exception.InvalidValueException;
 import br.ufrn.imd.bancovestido.exception.ResourceNotFoundException;
 import br.ufrn.imd.bancovestido.model.Conta;
@@ -69,6 +70,21 @@ public class ContaService {
         Conta conta = this.findOne(id);
         conta.setSaldo(conta.getSaldo().add(valor));
         this.contaRepository.save(conta);
+    }
+
+    @Transactional
+    public void renderJuros(String id, float juros) throws ResourceNotFoundException, InvalidValueException {
+        Conta conta = this.findOne(id);
+
+        if (conta.getTipoConta() == TipoConta.CONTA_POUPANCA){
+            BigDecimal porcentagem = new BigDecimal(Float.toString(juros/100));
+            BigDecimal valor = conta.getSaldo().multiply(porcentagem);
+            conta.setSaldo(conta.getSaldo().add(valor));
+            this.contaRepository.save(conta);
+        } else {
+            throw new InvalidValueException("Operação válida apenas para conta poupança");
+        }
+
     }
 
     @Transactional
