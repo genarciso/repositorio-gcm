@@ -59,4 +59,9 @@ public class ContaController {
         this.contaService.transferencia(transferenciaConta.getIdConta(), transferenciaConta.getIdContaDestino(), transferenciaConta.getValor());
     }
 
+    @PutMapping(path = "/{id}/render_juros")
+    public void earnInterest(@PathVariable(name = "id") String idConta, @RequestParam(name = "juros") float juros) throws ResourceNotFoundException, InvalidValueException {
+        this.contaService.renderJuros(idConta, juros);
+    }
+
 }

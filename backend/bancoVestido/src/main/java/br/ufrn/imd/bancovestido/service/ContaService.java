@@ -81,6 +81,21 @@ public class ContaService {
     }
 
     @Transactional
+    public void renderJuros(String id, float juros) throws ResourceNotFoundException, InvalidValueException {
+        Conta conta = this.findOne(id);
+
+        if (conta.getTipoConta() == TipoConta.CONTA_POUPANCA){
+            BigDecimal porcentagem = new BigDecimal(Float.toString(juros/100));
+            BigDecimal valor = conta.getSaldo().multiply(porcentagem);
+            conta.setSaldo(conta.getSaldo().add(valor));
+            this.contaRepository.save(conta);
+        } else {
+            throw new InvalidValueException("Operação válida apenas para conta poupança");
+        }
+
+    }
+
+    @Transactional
     public void transferencia(String idConta, String idContaDestino, BigDecimal valor) throws ResourceNotFoundException, InvalidValueException {
         Conta conta = this.findOne(idConta);
         if (conta.getSaldo().doubleValue() >= valor.doubleValue()) {
