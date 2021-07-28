@@ -4,6 +4,7 @@ import br.ufrn.imd.bancovestido.enuns.TipoConta;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -27,6 +28,9 @@ public class Conta {
 
     @Column(name = "saldo")
     private BigDecimal saldo = BigDecimal.ZERO;
+
+    @Column(name = "pontuacao")
+    private int pontuacao = 0;
 
     @Column(name = "numero_conta", unique = true)
     private String numeroConta = "";
