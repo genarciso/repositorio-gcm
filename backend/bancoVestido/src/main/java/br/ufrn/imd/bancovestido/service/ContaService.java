@@ -1,5 +1,6 @@
 package br.ufrn.imd.bancovestido.service;
 
+import br.ufrn.imd.bancovestido.enuns.TipoConta;
 import br.ufrn.imd.bancovestido.exception.InvalidValueException;
 import br.ufrn.imd.bancovestido.exception.ResourceNotFoundException;
 import br.ufrn.imd.bancovestido.model.Conta;
@@ -13,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +44,13 @@ public class ContaService {
             Pessoa pessoa = this.pessoaRepository.findById(conta.getPessoa().getId())
                     .orElseThrow(ResourceNotFoundException::new);
             contaBD.setPessoa(pessoa);
+
+            if (conta.getTipoConta() == TipoConta.CONTA_BONUS) {
+                conta.setPontuacao(10);
+            }
         }
+
+
 
         BeanUtils.copyProperties(conta, contaBD, Conta.ignoreProperties);
 
@@ -65,21 +71,21 @@ public class ContaService {
     }
 
     @Transactional
-    public void credito(String id, BigDecimal valor) throws ResourceNotFoundException {
+    public void credito(String id, BigDecimal valor, int valorPontuacao) throws ResourceNotFoundException {
         Conta conta = this.findOne(id);
         conta.setSaldo(conta.getSaldo().add(valor));
+        if (conta.getTipoConta() == TipoConta.CONTA_BONUS) {
+            conta.setPontuacao(conta.getPontuacao() + (int) (valor.doubleValue() / valorPontuacao));
+        }
         this.contaRepository.save(conta);
     }
 
     @Transactional
     public void transferencia(String idConta, String idContaDestino, BigDecimal valor) throws ResourceNotFoundException, InvalidValueException {
         Conta conta = this.findOne(idConta);
-        Conta contaDestino = this.findOne(idContaDestino);
         if (conta.getSaldo().doubleValue() >= valor.doubleValue()) {
-            credito(idContaDestino, valor);
             debito(idConta, valor);
-            this.save(conta);
-            this.save(contaDestino);
+            credito(idContaDestino, valor, 200);
         } else {
             throw new InvalidValueException("Valor insuficiente para transferência");
         }

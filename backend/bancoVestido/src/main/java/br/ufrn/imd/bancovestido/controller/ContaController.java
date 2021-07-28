@@ -51,7 +51,7 @@ public class ContaController {
 
     @PutMapping(path = "/{id}/credito")
     public void credit(@PathVariable(name = "id") String idConta, @RequestParam(name = "valor") BigDecimal value) throws ResourceNotFoundException {
-        this.contaService.credito(idConta, value);
+        this.contaService.credito(idConta, value, 100);
     }
 
     @PostMapping(path = "/transferir")

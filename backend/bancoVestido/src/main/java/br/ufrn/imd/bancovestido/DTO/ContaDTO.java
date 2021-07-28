@@ -14,6 +14,7 @@ public class ContaDTO {
     private Long id;
     private String numeroConta;
     private TipoConta tipoConta;
+    private int pontuacao = 0;
     private BigDecimal saldo = BigDecimal.ZERO;
     private PessoaDTO pessoa;
 }

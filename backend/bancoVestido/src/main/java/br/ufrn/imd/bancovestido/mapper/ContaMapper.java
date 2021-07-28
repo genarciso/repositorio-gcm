@@ -11,6 +11,7 @@ public class ContaMapper {
         contaDTO.setNumeroConta(conta.getNumeroConta());
         contaDTO.setTipoConta(conta.getTipoConta());
         contaDTO.setSaldo(conta.getSaldo());
+        contaDTO.setPontuacao(conta.getPontuacao());
         contaDTO.setPessoa(PessoaMapper.map(conta.getPessoa()));
 
         return contaDTO;
@@ -22,6 +23,7 @@ public class ContaMapper {
         conta.setId(contaDTO.getId());
         conta.setNumeroConta(contaDTO.getNumeroConta());
         conta.setTipoConta(contaDTO.getTipoConta());
+        conta.setPontuacao(contaDTO.getPontuacao());
         conta.setSaldo(contaDTO.getSaldo());
         conta.setPessoa(PessoaMapper.map(contaDTO.getPessoa()));
 
