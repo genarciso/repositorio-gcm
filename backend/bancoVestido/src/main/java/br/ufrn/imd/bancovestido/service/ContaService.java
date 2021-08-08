@@ -35,7 +35,7 @@ public class ContaService {
     }
 
     @Transactional
-    public Conta save(Conta conta) throws ResourceNotFoundException {
+    public Conta save(Conta conta) throws ResourceNotFoundException, InvalidValueException {
         Conta contaBD = new Conta();
 
         if (conta.getId() != null) {
@@ -48,9 +48,12 @@ public class ContaService {
             if (conta.getTipoConta() == TipoConta.CONTA_BONUS) {
                 conta.setPontuacao(10);
             }
+
+            if (conta.getTipoConta() == TipoConta.CONTA_POUPANCA && conta.getSaldo().doubleValue() < 0) {
+                throw new InvalidValueException("Poupança não pode ter um saldo negativo");
+
+            }
         }
-
-
 
         BeanUtils.copyProperties(conta, contaBD, Conta.ignoreProperties);
 
@@ -64,8 +67,12 @@ public class ContaService {
     }
 
     @Transactional
-    public void debito(String id, BigDecimal valor) throws ResourceNotFoundException {
+    public void debito(String id, BigDecimal valor) throws ResourceNotFoundException, InvalidValueException {
         Conta conta = this.findOne(id);
+        if (conta.getTipoConta() == TipoConta.CONTA_POUPANCA && conta.getSaldo().subtract(valor).doubleValue() < 0) {
+            throw new InvalidValueException("Valor insuficiente para debito");
+
+        }
         conta.setSaldo(conta.getSaldo().subtract(valor));
         this.contaRepository.save(conta);
     }
@@ -98,6 +105,11 @@ public class ContaService {
     @Transactional
     public void transferencia(String idConta, String idContaDestino, BigDecimal valor) throws ResourceNotFoundException, InvalidValueException {
         Conta conta = this.findOne(idConta);
+        if (conta.getTipoConta() == TipoConta.CONTA_POUPANCA && conta.getSaldo().subtract(valor).doubleValue() < 0) {
+            throw new InvalidValueException("Valor insuficiente para transferência");
+
+        }
+
         if (conta.getSaldo().doubleValue() >= valor.doubleValue()) {
             debito(idConta, valor);
             credito(idContaDestino, valor, 150);

@@ -35,7 +35,7 @@ public class ContaController {
     }
 
     @PostMapping
-    public Long save(@RequestBody ContaDTO conta) throws ResourceNotFoundException {
+    public Long save(@RequestBody ContaDTO conta) throws ResourceNotFoundException, InvalidValueException {
         return this.contaService.save(ContaMapper.map(conta)).getId();
     }
 
@@ -45,7 +45,7 @@ public class ContaController {
     }
 
     @PutMapping(path = "/{id}/debito")
-    public void debit(@PathVariable(name = "id") String idConta, @RequestParam(name = "valor") BigDecimal value) throws ResourceNotFoundException {
+    public void debit(@PathVariable(name = "id") String idConta, @RequestParam(name = "valor") BigDecimal value) throws ResourceNotFoundException, InvalidValueException {
         this.contaService.debito(idConta, value);
     }
 
