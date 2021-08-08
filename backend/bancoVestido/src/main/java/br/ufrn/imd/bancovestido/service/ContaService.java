@@ -100,7 +100,7 @@ public class ContaService {
         Conta conta = this.findOne(idConta);
         if (conta.getSaldo().doubleValue() >= valor.doubleValue()) {
             debito(idConta, valor);
-            credito(idContaDestino, valor, 200);
+            credito(idContaDestino, valor, 150);
         } else {
             throw new InvalidValueException("Valor insuficiente para transferência");
         }
