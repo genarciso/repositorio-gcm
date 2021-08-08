@@ -35,7 +35,7 @@ public class ContaController {
     }
 
     @PostMapping
-    public Long save(@RequestBody ContaDTO conta) throws ResourceNotFoundException {
+    public Long save(@RequestBody ContaDTO conta) throws ResourceNotFoundException, InvalidValueException {
         return this.contaService.save(ContaMapper.map(conta)).getId();
     }
 

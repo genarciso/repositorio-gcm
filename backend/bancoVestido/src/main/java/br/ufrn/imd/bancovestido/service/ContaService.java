@@ -35,7 +35,7 @@ public class ContaService {
     }
 
     @Transactional
-    public Conta save(Conta conta) throws ResourceNotFoundException {
+    public Conta save(Conta conta) throws ResourceNotFoundException, InvalidValueException {
         Conta contaBD = new Conta();
 
         if (conta.getId() != null) {
@@ -48,9 +48,13 @@ public class ContaService {
             if (conta.getTipoConta() == TipoConta.CONTA_BONUS) {
                 conta.setPontuacao(10);
             }
+
+            if (conta.getTipoConta() == TipoConta.CONTA_POUPANCA) {
+                if (conta.getSaldo() == null){
+                    throw new InvalidValueException("É necessário informar um saldo inicial");
+                }
+            }
         }
-
-
 
         BeanUtils.copyProperties(conta, contaBD, Conta.ignoreProperties);
 
