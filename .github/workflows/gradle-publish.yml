@@ -12,11 +12,15 @@ on:
 
 jobs:
   
-  build-test:
+  build-and-test-backend:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
+
+    defaults:
+      run:
+        working-directory: backend/bancoVestido
 
     steps:
     - uses: actions/checkout@v2
@@ -28,12 +32,9 @@ jobs:
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
 
-    - name: permission to execute Gradle
-      run: chmod +x ./backend/bancoVestido/gradlew
-
     - name: Build with Gradle
-      run: ./backend/bancoVestido/gradlew build
+      run: gradle build
 
     - name: Test with Gradle
-      run: ./backend/bancoVestido/gradlew test
+      run: gradle test
     
