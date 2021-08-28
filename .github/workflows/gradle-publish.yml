@@ -28,9 +28,12 @@ jobs:
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
 
+    - name: permission to execute Gradle
+      run: chmod +x ./backend/bancoVestido/gradlew
+
     - name: Build with Gradle
-      run: ./backend/bancoVestido/gradle build
+      run: ./backend/bancoVestido/gradlew build
 
     - name: Test with Gradle
-      run: ./backend/bancoVestido/gradle test
+      run: ./backend/bancoVestido/gradlew test
     
