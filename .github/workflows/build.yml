@@ -5,12 +5,15 @@ on:
       - release-* # or the name of your main branch
   pull_request:
     branches:
-      - release-* # or the name of your main branch
+      - release-*  # or the name of your main branch
 
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend/bancoVestido
     steps:
       - uses: actions/checkout@v2
         with:
@@ -31,9 +34,12 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
+      - name: Making gradlew executable
+        run: chmod +x ./gradlew
+
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        run: ./backend/bancoVestido/gradlew build sonarqube --info
+        run: ./gradlew build sonarqube --info
