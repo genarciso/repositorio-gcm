@@ -19,6 +19,8 @@ plugins {
 
 apply plugin: 'org.sonarqube'
 
+tasks['sonarqube'].dependsOn test
+
 group = 'br.ufrn.imd'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
