@@ -53,6 +53,6 @@ jobs:
           files: ./
           dest: bancoVestido.zip
       - uses: actions/upload-artifact@v1
-          with:
-            name: my-artifact
-            path: ${{ github.workspace }}/bancoVestido.zip
+        with:
+          name: my-artifact
+          path: ${{ github.workspace }}/bancoVestido.zip
