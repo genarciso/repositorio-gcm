@@ -18,6 +18,7 @@ plugins {
 }
 
 apply plugin: 'org.sonarqube'
+apply from: './sonar.gradle'
 
 
 group = 'br.ufrn.imd'

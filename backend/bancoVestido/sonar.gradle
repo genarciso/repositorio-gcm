@@ -1,0 +1,13 @@
+sonarqube {
+    properties {
+        property "sonar.projectName", "repositorio-gcm" //nome que será exibido no dashboard do SonarQube
+        property "sonar.projectKey", "repositorio-gcm" //chave/id único do projeto no dashboard do SonarQube
+        property "sonar.host.url", "http://127.0.0.1:9000/" //endereço do seu server do SonarQube
+        property "sonar.language", "java" //não percebi nenhuma diferença ao trocar para kotlin
+        property "sonar.login", "513319e39a4a2e5c1d318c620855e5104d025ae5" //nome de usuário para logar com funções de adm para poder subir os projetos e atualizações
+        //property "sonar.password", "senha" //senha desse usuario
+
+        property "sonar.sources", "src/main/" //quais são os arquivos .java e .kt daonde o SonarQube vai tirar as métricas
+        property "sonar.tests", "src/test/" //O caminho para os testes unitários. Mas não sei pra q server ainda já que os relatórios de cobertura são extraídos do jacoco
+    }
+}
