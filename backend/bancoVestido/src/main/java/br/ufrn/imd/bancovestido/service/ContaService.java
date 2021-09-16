@@ -35,7 +35,7 @@ public class ContaService {
     }
 
     @Transactional
-    public Conta save(Conta conta) throws ResourceNotFoundException {
+    public Conta save(Conta conta) throws ResourceNotFoundException, InvalidValueException {
         Conta contaBD = new Conta();
 
         if (conta.getId() != null) {
@@ -48,9 +48,19 @@ public class ContaService {
             if (conta.getTipoConta() == TipoConta.CONTA_BONUS) {
                 conta.setPontuacao(10);
             }
+            if (conta.getTipoConta() == TipoConta.CONTA_POUPANCA) {
+                if (conta.getSaldo() == null){
+                    throw new InvalidValueException("É necessário informar um saldo inicial");
+                }
+                else if (conta.getSaldo().doubleValue() < 0) {
+                    throw new InvalidValueException("Poupança não pode ter um saldo negativo");
+                }
+            } else {
+                if (conta.getSaldo().doubleValue() < -1000) {
+                    throw new InvalidValueException("Saldo negativo excedido");
+                }
+            }
         }
-
-
 
         BeanUtils.copyProperties(conta, contaBD, Conta.ignoreProperties);
 
@@ -64,8 +74,15 @@ public class ContaService {
     }
 
     @Transactional
-    public void debito(String id, BigDecimal valor) throws ResourceNotFoundException {
+    public void debito(String id, BigDecimal valor) throws ResourceNotFoundException, InvalidValueException {
         Conta conta = this.findOne(id);
+
+        if (conta.getTipoConta() == TipoConta.CONTA_POUPANCA && conta.getSaldo().subtract(valor).doubleValue() < 0) {
+            throw new InvalidValueException("Valor insuficiente para debito");
+        }
+        if (conta.getTipoConta() != TipoConta.CONTA_POUPANCA && conta.getSaldo().subtract(valor).doubleValue() < -1000.00) {
+            throw new InvalidValueException("Valor negativo excedeu para debito");
+        }
         conta.setSaldo(conta.getSaldo().subtract(valor));
         this.contaRepository.save(conta);
     }
@@ -98,11 +115,16 @@ public class ContaService {
     @Transactional
     public void transferencia(String idConta, String idContaDestino, BigDecimal valor) throws ResourceNotFoundException, InvalidValueException {
         Conta conta = this.findOne(idConta);
-        if (conta.getSaldo().doubleValue() >= valor.doubleValue()) {
-            debito(idConta, valor);
-            credito(idContaDestino, valor, 150);
-        } else {
+
+        if (conta.getTipoConta() == TipoConta.CONTA_POUPANCA && conta.getSaldo().subtract(valor).doubleValue() < 0) {
+            throw new InvalidValueException("Valor insuficiente para transferência");
+
+        }
+        if (conta.getTipoConta() != TipoConta.CONTA_POUPANCA && conta.getSaldo().subtract(valor).doubleValue() < -1000.00) {
             throw new InvalidValueException("Valor insuficiente para transferência");
         }
+
+        debito(idConta, valor);
+        credito(idContaDestino, valor, 150);
     }
 }
